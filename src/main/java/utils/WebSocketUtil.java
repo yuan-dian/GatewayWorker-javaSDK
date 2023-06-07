@@ -125,9 +125,8 @@ public class WebSocketUtil {
      * @param uid
      * @param message
      * @return
-     * @throws IOException
      */
-    public static boolean sendToUid(String uid, String message) throws IOException {
+    public static boolean sendToUid(String uid, String message) {
         Encode encode = new Encode();
         encode.setCmd(CMD_SEND_TO_UID);
         encode.setBody(message);
@@ -170,7 +169,7 @@ public class WebSocketUtil {
      */
     protected static Encode clientIdToAddress(String clientId) throws Exception {
         if (clientId.length() != 20) {
-            throw new Exception("client_id $client_id is invalid");
+            throw new Exception("client_id " + clientId + " is invalid");
         }
         return unpack(clientId);
     }
@@ -264,18 +263,22 @@ public class WebSocketUtil {
      *
      * @param encode
      * @return
-     * @throws IOException
      */
-    protected static boolean sendToAllGateway(Encode encode) throws IOException {
+    protected static boolean sendToAllGateway(Encode encode) {
         byte[] buffer = encode(encode);
-        List<String> allAddresses = getAllGatewayAddressesFromRegister();
+        try {
+            List<String> allAddresses = getAllGatewayAddressesFromRegister();
 
-        if (allAddresses == null) {
-            throw new IOException("Gateway::getAllGatewayAddressesFromRegister() with registerAddress is empty");
-        }
-        for (String address : allAddresses) {
-            String[] split = address.split(":", 2);
-            executor.execute(() -> sendBufferToGateway(split[0], Short.parseShort(split[1]), buffer));
+            if (allAddresses == null) {
+                throw new IOException("Gateway::getAllGatewayAddressesFromRegister() with registerAddress is empty");
+            }
+            for (String address : allAddresses) {
+                String[] split = address.split(":", 2);
+                executor.execute(() -> sendBufferToGateway(split[0], Short.parseShort(split[1]), buffer));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
         return true;
     }
