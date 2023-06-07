@@ -29,8 +29,10 @@ public class WebSocketUtil {
     /*** 发给gateway的向单个用户发送数据 */
     private final static Byte CMD_SEND_TO_ONE = 5;
 
-    /*** client_id绑定到uid */
+    /*** client_id 绑定到 uid */
     private final static Byte CMD_BIND_UID = 12;
+    /*** client_id 解绑 uid */
+    private final static Byte CMD_UNBIND_UID = 13;
     /*** 向uid发送数据 */
     private final static Byte CMD_SEND_TO_UID = 14;
     /*** GatewayClient连接gateway事件 */
@@ -88,12 +90,12 @@ public class WebSocketUtil {
      * 给客户端发消息
      *
      * @param clientId
-     * @param body
+     * @param message
      * @return
      * @throws Exception
      */
-    public static boolean sendToClient(String clientId, String body) throws Exception {
-        return sendCmdAndMessageToClient(clientId, CMD_SEND_TO_ONE, body, null);
+    public static boolean sendToClient(String clientId, String message) throws Exception {
+        return sendCmdAndMessageToClient(clientId, CMD_SEND_TO_ONE, message, null);
     }
 
     /**
@@ -106,6 +108,18 @@ public class WebSocketUtil {
      */
     public static boolean bindUid(String clientId, String uid) throws Exception {
         return sendCmdAndMessageToClient(clientId, CMD_BIND_UID, "", uid);
+    }
+
+    /**
+     * 解绑
+     *
+     * @param clientId
+     * @param uid
+     * @return
+     * @throws Exception
+     */
+    public static boolean unbindUid(String clientId, String uid) throws Exception {
+        return sendCmdAndMessageToClient(clientId, CMD_UNBIND_UID, "", uid);
     }
 
     /**
