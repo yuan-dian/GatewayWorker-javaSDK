@@ -3,11 +3,8 @@ package utils;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -421,9 +418,6 @@ public class WebSocketUtil {
 
     @Getter
     @Setter
-    @AllArgsConstructor
-    @Builder
-    @Accessors(chain = true)
     public static class Encode implements Serializable {
         private static final long serialVersionUID = 801205930039755892L;
         private Byte cmd;
